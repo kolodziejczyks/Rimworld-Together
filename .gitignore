@@ -403,6 +403,13 @@ FodyWeavers.xsd
 # Container run volume
 Data
 
+# Local SDK and verification scratch (not part of the mod)
+.verify-tools/
+.verify-runs/
+.cursor/skills/verify-rtserver/evidence/
+.cursor/skills/verify-market-sale/runs/
+.cursor/skills/verify-market-sale/MarketBuy_TTrace_*
+
 # Visual Studio Code
 Source/.vscode/*.*
 
@@ -414,3 +421,4 @@ Source/.vscode/*.*
 1.5/Assemblies
 1.6/Assemblies
 /Current/Assemblies
+.cursor/skills/verify-market-sale/states/
