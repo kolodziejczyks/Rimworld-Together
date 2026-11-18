@@ -97,7 +97,11 @@ namespace RTServer.Hooks.TCPNetwork
 
         public static ServerClient GetConnectedClientFromUsername(string username)
         {
-            return GetConnectedClients().FirstOrDefault(fetch => fetch.GetData<FL_Player>().Username == username);
+            return GetConnectedClients().FirstOrDefault(fetch =>
+            {
+                FL_Player player = fetch.GetData<FL_Player>();
+                return player != null && player.Username == username;
+            });
         }
         
         public static ServerClient GetConnectedClientFromHash(string hash)
