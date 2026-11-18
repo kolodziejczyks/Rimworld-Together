@@ -3,6 +3,7 @@ using RTNetwork.PacketManagers;
 using RTNetwork.Packets;
 using RTServer.Core;
 using RTServer.Managers;
+using RTShared.Files.Default;
 using RTShared.Files.Player;
 using RTShared.Misc;
 using static RTNetwork.Packets.PKT_Zoom;
@@ -32,7 +33,9 @@ namespace RTServer.PacketManagers
 
         private static void SendRequestedMap(ServerClient client, PKT_Zoom data)
         {
-            if (!PM_Map.CheckIfMapExists(data.TargetTile))
+            // An accepted zoom loads a ticking map on the watcher. With the owner
+            // offline there is no host, so births and other events land on the watcher.
+            if (!PM_Map.CheckIfMapExists(data.TargetTile) || !IsSettlementOwnerConnected(data.TargetTile))
             {
                 data.CurrentStepMode = StepMode.Deny;
                 client.Listener.EnqueuePacket(PacketHeader.Zoom, data);
@@ -44,6 +47,12 @@ namespace RTServer.PacketManagers
                 data.MapBytes = PM_Map.GetMapFromTile(data.TargetTile);
                 client.Listener.EnqueuePacket(PacketHeader.Zoom, data);
             }
+        }
+
+        private static bool IsSettlementOwnerConnected(int tile)
+        {
+            FL_Settlement settlement = PM_Settlements.GetSettlementFileFromTile(tile);
+            return settlement != null && UserManager.CheckIfUserIsConnected(settlement.Username);
         }
     }
 }
