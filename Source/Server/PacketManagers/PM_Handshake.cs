@@ -66,7 +66,11 @@ namespace RTServer.PacketManagers
         
         private static void OnHandshakeAccept(ServerClient client, PKT_Handshake packet) { client.VerifyClient(); }
 
-        private static void OnHandshakeDeny(ServerClient client, PKT_Handshake packet) { Printer.Error($"Handshake with '{client.IP}' was invalid, disconnecting"); }
+        private static void OnHandshakeDeny(ServerClient client, PKT_Handshake packet)
+        {
+            client.Listener.MarkForDisconnect();
+            Printer.Error($"Handshake with '{client.IP}' was invalid, disconnecting");
+        }
 
         private static List<string> GetLocalManagers() { return PM_Base.PacketDictionary.Values.Select(obj => obj[0].GetType().Name).ToList(); }
     }
